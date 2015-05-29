@@ -1,0 +1,42 @@
+<?xml version="1.0.0" encoding="UTF-8" standalone="no"?>
+<macromedia-extension 
+	name="SpringRoll Flash Toolkit" 
+	id="io.springroll.toolkit" 
+	requires-restart="true" 
+	version="1.0.0">
+	<author name="SpringRoll"/>
+	<description>
+		<![CDATA[Commands for Exporting, Optimizing and Publish HTML5 Canvas documents]]>
+	</description>
+	<license-agreement>
+		<![CDATA[MIT]]>
+	</license-agreement>
+ 	<products>
+		<product version="13" primary="true" name="Flash"/>
+	</products>	
+	<files>
+
+		<file source="JSFLLibraries/ArrayUtils.jsfl" destination="$Flash/JSFLLibraries/" />
+		<file source="JSFLLibraries/ObjectUtils.jsfl" destination="$Flash/JSFLLibraries/" />
+		<file source="JSFLLibraries/Command.jsfl" destination="$Flash/JSFLLibraries/" />
+		<file source="JSFLLibraries/JSON.jsfl" destination="$Flash/JSFLLibraries/" />
+		<file source="JSFLLibraries/XULWindow.jsfl" destination="$Flash/JSFLLibraries/" />
+		
+		<file source="Commands/Timeline/Animation Event Label.jsfl" destination="$Flash/Commands/Timeline/" />
+		<file source="Commands/Timeline/AnimationEventLabel.json" destination="$Flash/Commands/Timeline/" />
+
+		<file source="Commands/Exporting/Export BitmapMovieClip.jsfl" destination="$Flash/Commands/Exporting/" />
+		<file source="Commands/Exporting/Export Frame Label Sequences.jsfl" destination="$Flash/Commands/Exporting/" />
+
+		<file source="Commands/Optimizing/Optimize Graphics.jsfl" destination="$Flash/Commands/Optimizing/" />
+		<file source="Commands/Optimizing/Optimize Keyframes.jsfl" destination="$Flash/Commands/Optimizing/" />
+		<file source="Commands/Optimizing/OptimizeKeyframes.json" destination="$Flash/Commands/Optimizing/" />
+		<file source="Commands/Optimizing/Filter Finder.jsfl" destination="$Flash/Commands/Optimizing/" />
+		<file source="Commands/Optimizing/Usage Report.jsfl" destination="$Flash/Commands/Optimizing/" />
+		<file source="Commands/Optimizing/Clear Extra Blank Keyframes.jsfl" destination="$Flash/Commands/Optimizing/" />
+		<file source="Commands/Optimizing/HTML5 Canvas Size Report.jsfl" destination="$Flash/Commands/Optimizing/" />
+
+		<file source="Tools/HTMLCanvasPostPublish.jsfl" destination="$Flash/Tools/" />
+
+	</files>	
+</macromedia-extension>
