@@ -20,7 +20,7 @@ module.exports = function(grunt)
 
 	grunt.initConfig({
 		settings: settings || {},
-		output: 'bin/FlashToolkit.zxp',
+		output: 'FlashToolkit.zxp',
 		jshint: {
 			all: {
 				src: [
