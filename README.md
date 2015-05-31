@@ -1,4 +1,4 @@
-# SpringRoll Flash Toolkit [![Build Status](https://travis-ci.org/SpringRoll/FlashToolkit.svg)](https://travis-ci.org/SpringRoll/FlashToolkit)
+# SpringRoll Flash Toolkit [![Build Status](https://travis-ci.org/SpringRoll/FlashToolkit.svg)](https://travis-ci.org/SpringRoll/FlashToolkit) [![GitHub version](https://badge.fury.io/gh/SpringRoll%2FFlashToolkit.svg)](http://badge.fury.io/gh/SpringRoll%2FFlashToolkit)
 
 Adobe Flash Professional CC 2014 Commands for Exporting, Optimizing and Publish HTML5 Canvas document. While these commands are exclusive to using SpringRoll, there are a couple helper function for use with certain SpringRoll features.
 
