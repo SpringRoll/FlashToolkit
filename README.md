@@ -22,7 +22,7 @@ Export a sequence of PNGs based on the frame labels. Useful if you're creating s
 
 #### Optimizing/Clear Extra Blank Keyframe
 
-Remove all redundant clear keyframes, in order versions of CC 2014, blank keyframes added more filesize and produced playback issues in CreateJS. To use, run the command on the current timeline.
+Remove all redundant clear keyframes. In earlier versions of CC and CC 2014, blank keyframes added more filesize and produced playback issues in CreateJS. To use, run the command on the current timeline.
 
 #### Optimizing/Filter Finder
 
