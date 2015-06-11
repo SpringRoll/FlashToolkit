@@ -165,7 +165,9 @@
 			var exporter = new SpriteSheetExporter();
 			exporter.layoutFormat = "JSON";
 			exporter.algorithm = "maxRects";
-			exporter.allowRotate = true;
+			//While SpringRoll supports rotated textures, it seems like Flash's exporter doesn't
+			//handle them properly and outputs sprites with a little bit of an offset
+			exporter.allowRotate = false;
 			exporter.allowTrimming = true;
 			exporter.autoSize = true;
 			exporter.maxSheetWidth = 2048;
