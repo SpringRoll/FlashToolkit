@@ -56,6 +56,8 @@
 		content = classRef(content, "cjs.Tween");
 		content = classRef(content, "cjs.Bitmap");
 		content = classRef(content, "cjs.MovieClip");
+		content = classRef(content, "cjs.Sprite");
+		content = classRef(content, "cjs.Ease");
 
 		var libItem = /\(([\w\d]+)\.[\w\d]+? \= function\(.*?\) \{([\s\S]+?)\}\)\.prototype \= p/gm;
 		var libItems = content.match(libItem);
