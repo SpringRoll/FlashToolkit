@@ -30,15 +30,13 @@ module.exports = function(grunt)
 			}
 		},
 		exec: {
-			package: "java " +
-				"-jar '<%= settings.packager %>' " +
-				"-package " +
-				"-storetype PKCS12 " +
-				"-keystore <%= settings.keystore %> " +
-				"-storepass <%= settings.storepass %> " +
-				"-tsa https://timestamp.geotrust.com/tsa " +
+			package: "'<%= settings.packager %>' " +
+				"-sign " +
+				"src " +
 				"'<%= output %>' " +
-				"-C src ."
+				"<%= settings.keystore %> " +
+				"<%= settings.storepass %>"
+				
 		},
 		version: {
 			options: {
