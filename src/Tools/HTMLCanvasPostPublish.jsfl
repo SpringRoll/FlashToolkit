@@ -1,8 +1,15 @@
-(function()
+(function(window)
 {
 	fl.addEventListener("postPublish", onPostPublish);
 
 	function onPostPublish()
+	{
+		fl.showIdleMessage(false);
+		postPublish();
+		fl.showIdleMessage(true);
+	}
+
+	function postPublish()
 	{
 		// Get the current document
 		var dom = fl.getDocumentDOM();
@@ -38,6 +45,30 @@
 		if (!FLfile.exists(file)) return;
 
 		var content = FLfile.read(file);
+		
+		try
+		{
+			var empty = function(){};
+
+			var createjs = {
+				Container: empty,
+				Bitmap: empty,
+				MovieClip: empty,
+				Shape: empty,
+				Sprite: empty,
+				Tween: empty,
+				Rectangle: empty,
+				Ease: empty
+			};
+
+			eval(content); // jshint ignore:line
+		}
+		catch(e)
+		{
+			fl.trace("error: " + e.message);
+			alert("File was published improperly. Please quit Flash and try publishing again.");
+			return;
+		}
 
 		// Extract the properties
 		var regex = new RegExp("properties = [^;]+;", "gm");
@@ -81,7 +112,7 @@
 						id = matches[i].substr(5).replace(" =", '');
 						libContent = "\n\tvar " + id + ";" + libContent;
 						libContent = libContent.replace(
-							new RegExp("this\." + id + "([\.\,\)\}\;])", "g"), 
+							new RegExp("this\." + id + "([\.\,\)\}\;])", "g"),
 							id + "$1"
 						);
 					}
@@ -169,26 +200,26 @@
 	function stringify(obj)
 	{
 		var t = typeof (obj);
-		if (t != "object" || obj === null) 
+		if (t != "object" || obj === null)
 		{
 			// simple data type
 			if (t == "string") obj = '"' + obj + '"';
 			return String(obj);
-		} 
-		else 
+		}
+		else
 		{
 			// recurse array or object
 			var n, v, json = [], arr = (obj && obj.constructor == Array);
  
-			for (n in obj) 
+			for (n in obj)
 			{
 				v = obj[n];
 				t = typeof(v);
-				if (obj.hasOwnProperty(n)) 
+				if (obj.hasOwnProperty(n))
 				{
-					if (t == "string") 
-						v = '"' + v + '"'; 
-					else if (t == "object" && v !== null) 
+					if (t == "string")
+						v = '"' + v + '"';
+					else if (t == "object" && v !== null)
 						v = stringify(v);
 					json.push((arr ? "" : '"' + n + '":') + String(v));
 				}
@@ -197,4 +228,4 @@
 		}
 	}
 
-}());
+}(window));

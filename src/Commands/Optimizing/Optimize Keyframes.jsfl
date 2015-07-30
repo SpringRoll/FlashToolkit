@@ -12,6 +12,8 @@
 	var OptimizeKeyframes = function()
 	{
 		if (!this.getDOM()) return;
+		
+		fl.showIdleMessage(false);
 
 		// Get the saved checks
 		var settingsPath = 'Commands/Optimizing/OptimizeKeyframes.json';
@@ -59,13 +61,15 @@
 
 		// get the current timeline
 		this.preprocess(this.dom.getTimeline());
+		
+		fl.showIdleMessage(true);
 	};
 
 	// Reference to the prototype
 	var p = OptimizeKeyframes.prototype = new Command();
 
 	/**
-	 * First, a preprocess task will remove any tween where the keyframes 
+	 * First, a preprocess task will remove any tween where the keyframes
 	 * are the same, this will help eliminate more cases where tweens
 	 * would typically block the optimizing of keyframes
 	 * @method preprocess
@@ -115,7 +119,7 @@
 				lastKeyframe = frame;
 
 				// go to the next keyframe
-				j += frame.duration;				
+				j += frame.duration;
 			}
 
 			// Clear the keyframe for each layer
@@ -160,7 +164,7 @@
 				}
 
 				// go to the next keyframe
-				j += frame.duration;				
+				j += frame.duration;
 			}
 
 			// Clear the keyframe for each layer
@@ -183,7 +187,7 @@
 			return false;
 		}
 
-		// Loop through all the elements, they should 
+		// Loop through all the elements, they should
 		// be in the same layered order to be considered the same
 		// so we'll compare an element in the last keyframe
 		// and a keyframe in the current keyframe

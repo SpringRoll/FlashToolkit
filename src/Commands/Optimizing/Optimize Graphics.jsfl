@@ -82,6 +82,8 @@
 			return;
 		}
 		
+		fl.showIdleMessage(false);
+		
 		// Clear the output window
 		fl.outputPanel.clear();
 		fl.trace("+------------------------------------------+");
@@ -120,6 +122,8 @@
 		}
 		var sec = Math.round((microtime() - now) * 1000) / 1000;
 		fl.trace("\nFinished optimizing in " + sec + " sec");
+		
+		fl.showIdleMessage(true);
 	};
 
 	/**
