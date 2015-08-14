@@ -25,6 +25,10 @@ Export a sequence of PNGs based on the frame labels. Useful if you're creating s
 
 Remove all redundant clear keyframes. In earlier versions of CC and CC 2014, blank keyframes added more filesize and produced playback issues in CreateJS. To use, run the command on the current timeline.
 
+#### Optimizing/Copy Layers To Bitmap
+
+This command combines all layers on the current timeline non-destructively into a single bitmap. All the layers are guided, locked and hidden. Running the script again will undo this convert and give you the normal vector layers. 
+
 #### Optimizing/Filter Finder
 
 Generate a report of all the MovieClips within the current project which contain filters (Color transforms, Drop shadows, etc). This is useful for tracking down and remove filters which harm performance. To use, simply run the command.
