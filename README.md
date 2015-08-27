@@ -7,7 +7,7 @@ Adobe Flash Professional Commands for Exporting, Optimizing and Publish HTML5 Ca
 * Visit the latest release [here](https://github.com/SpringRoll/FlashToolkit/releases)
 * Download **FlashToolkit.zxp** 
 * CC & CC 2014: Install ZXP with the [Adobe Extension Manager CC](https://www.adobe.com/exchange/em_download/).
-* CC 2015: Install ZXP with the commandline tool [`ExManCmd`](https://helpx.adobe.com/extension-manager/using/command-line.html)
+* CC 2015: Install ZXP with the  [Manage Extensions app](https://blogs.adobe.com/flashpro/installing-zxp-extensions-using-the-manage-extensions-utility/)
 
 ## Usage
 
