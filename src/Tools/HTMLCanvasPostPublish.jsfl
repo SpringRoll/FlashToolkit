@@ -46,26 +46,13 @@
 
 		var content = FLfile.read(file);
 		
-		try
+		//find the 'var lib, images, createj, ss;' line at the end of the file
+		var varFinder = /var (\w+), (\w+), (\w+), (\w+);$/m;
+		//also, the Flash 2014 'var lib, images, createj;'
+		var oldVarFinder = /var (\w+), (\w+), (\w+);$/m;
+		
+		if(!(varFinder.exec(content) || oldVarFinder.exec(content)))
 		{
-			var empty = function(){};
-
-			var createjs = {
-				Container: empty,
-				Bitmap: empty,
-				MovieClip: empty,
-				Shape: empty,
-				Sprite: empty,
-				Tween: empty,
-				Rectangle: empty,
-				Ease: empty
-			};
-
-			eval(content); // jshint ignore:line
-		}
-		catch(e)
-		{
-			fl.trace("error: " + e.message);
 			alert("File was published improperly. Please quit Flash and try publishing again.");
 			return;
 		}
