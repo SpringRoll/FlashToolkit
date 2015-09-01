@@ -53,6 +53,34 @@ Create animation event labels on the timeline which work with `springroll.easelj
 
 This is not a command. This script automatically is invoked whenever an HTML5 Canvas FLA is published. It does two things: first, a JSON file is created of the `lib.properties` (which contains the manifest, size, framerate, etc) of the current document. Also, the output file is optimize to better work with a JavaScript minification tool (e.g., [Uglify](https://github.com/mishoo/UglifyJS2)).
 
+## Building Toolkit
+
+### Dependencies
+
+To rebuild the extension for Flash, you need to have [Node](http://nodejs.org) and [Grunt](http://gruntjs.com/getting-started) installed. 
+
+Download and install the [Adobe Exchange Packager](https://www.adobeexchange.com/resources) (you will need to login to the Adobe Exchange to be able to download the application).
+
+### Create Environment Settings
+
+Create a **settings.json** file within the FlashToolkit project folder with the following format:
+
+```json
+{
+	"packager": "/Applications/Adobe Exchange Packager.app/Contents/Resources/macosx/ZXPSignCmd",
+	"keystore": "/Users/username/Documents/MySignedCertificate.p12",
+	"storepass": "myCertPassword"	
+}
+```
+
+### Building the ZXP
+
+Rebuild the Toolkit by running the default Grunt task:
+
+```bash
+grunt
+```
+
 ## License
 
 Copyright (c) 2015 [CloudKid](https://github.com/cloudkidstudio)
