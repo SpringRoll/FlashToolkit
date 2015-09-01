@@ -14,7 +14,7 @@ module.exports = function(grunt)
 	else
 	{
 		grunt.log.error("To build the FlashToolkit there must be a settings.json " +
-			"file which contains keys 'packager' (path to ucf.jar), 'keystore' " +
+			"file which contains keys 'packager' (path to ZXPSignCmd), 'keystore' " +
 			"(path to p12 certificate) and 'storepass' (certificate password).");
 	}
 
@@ -43,7 +43,7 @@ module.exports = function(grunt)
 				"src/io.springroll.toolkit.mxi": function(content, version)
 				{
 					return content.replace(
-						/version\=\".+?\"\>/, 
+						/version\=\".+?\"\>/,
 						'version="' + version + '">'
 					);
 				}
@@ -55,7 +55,7 @@ module.exports = function(grunt)
 	});
 
 	grunt.registerTask(
-		'default', 
+		'default',
 		'Default build and package',
 		[
 			'version:current',

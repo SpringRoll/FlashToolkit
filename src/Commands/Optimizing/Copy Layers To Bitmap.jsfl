@@ -6,6 +6,8 @@
 
 	var timeline = dom.getTimeline();
 	var folderLayer = timeline.layers[0];
+	
+	var i, bitmapLayer, bitmap;
 
 	if (folderLayer.name == "vectors")
 	{
@@ -15,10 +17,10 @@
 		{
 			// Get the bitmap layer
 			var bitmapIndex = timeline.layers.length - 1;
-			var bitmapLayer = timeline.layers[bitmapIndex];
+			bitmapLayer = timeline.layers[bitmapIndex];
 
 			// Delete the bitmap
-			var bitmap = bitmapLayer.frames[timeline.currentFrame].elements[0].libraryItem;
+			bitmap = bitmapLayer.frames[timeline.currentFrame].elements[0].libraryItem;
 			dom.library.deleteItem(bitmap.name);
 
 			// Delete the bitmap layer
@@ -30,13 +32,16 @@
 			folderLayer.layerType = "normal";
 			timeline.deleteLayer(0);
 
-			for (var i = timeline.layers.length - 1; i >= 0; i--)
+			for (i = timeline.layers.length - 1; i >= 0; i--)
 			{
 				timeline.layers[i].layerType = "normal";
 			}
 		}
 		return;
 	}
+	
+	// Ask to update the bitmap name
+	var bitmapName = prompt("Image Name", "");//bitmap.name);
 
 	// The number of layers
 	var origLength = timeline.layers.length;
@@ -63,38 +68,47 @@
 	var parentLayer = timeline.layers[0];
 	parentLayer.visible = false;
 	parentLayer.locked = true;
-
-	// Select the contents of the original layers
-	var frames = [];
-	var newLength = timeline.layers.length;
-	var startIndex = origLength + 1;
-
-	for(i = startIndex; i < newLength; i++)
-	{
-		frames.push(i, timeline.currentFrame, 1);
-	}
-
-	timeline.setSelectedFrames(frames);
-	dom.convertSelectionToBitmap();
-
-	// Delete the rest of the layers
-	for(i = startIndex + 1; i < newLength; i++)
-	{
-		timeline.deleteLayer(i);
-	}
-
+	
 	// Update the name of the layer with the bitmap
-	var bitmapLayer = timeline.layers[startIndex];
+	var newLayerLength = timeline.layers.length;
+	var bitmapLayerIndex = origLength + 1;
+	bitmapLayer = timeline.layers[bitmapLayerIndex];
 	bitmapLayer.name = "bitmap";
 
-	// Get the library item from the instance
-	var bitmap = bitmapLayer.frames[timeline.currentFrame].elements[0].libraryItem;
-
-	// Ask to update the bitmap name
-	var bitmapName = prompt("Image Name", bitmap.name);
-	if (bitmapName)
+	// Select the contents of the original layers
+	var numFrames = timeline.frameCount;
+	for(i = 0; i < numFrames; ++i)
 	{
-		bitmap.name = bitmapName;
+		timeline.currentFrame = i;
+		dom.selectAll();
+		//if nothing is selected, then continue
+		if(!dom.getSelectionRect())
+			continue;
+		//if we've selected an already converted bitmap, then continue
+		if(dom.selection.length == 1 && dom.selection[0].instanceType == "bitmap")
+			continue;
+		//convert selection
+		dom.convertSelectionToBitmap();
+		//put selection on the bitmap layer
+		dom.selectAll();
+		dom.clipCut();
+		timeline.setSelectedFrames([bitmapLayerIndex, i, i + 1]);
+		//ensure that there is a blank keyframe there to paste into
+		if(bitmapLayer.frameCount < i + 1 || bitmapLayer.frames[i].startFrame != i)
+			timeline.insertBlankKeyframe();
+		dom.clipPaste(true);
+		// Get the library item from the instance and rename it
+		if (bitmapName)
+		{
+			bitmap = bitmapLayer.frames[timeline.currentFrame].elements[0].libraryItem;
+			bitmap.name = numFrames > 1 ? bitmapName + (i+1) : bitmapName;
+		}
+	}
+	
+	// Delete the rest of the layers
+	for(i = bitmapLayerIndex + 1; i < newLayerLength; i++)
+	{
+		timeline.deleteLayer(i);
 	}
 	
 }());
