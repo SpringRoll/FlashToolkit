@@ -3,7 +3,7 @@
 	name="SpringRoll Flash Toolkit" 
 	id="io.springroll.toolkit" 
 	requires-restart="true" 
-	version="1.1.2">
+	version="1.1.3">
 	<author name="SpringRoll"/>
 	<description>
 		<![CDATA[Commands for Exporting, Optimizing and Publish HTML5 Canvas documents]]>

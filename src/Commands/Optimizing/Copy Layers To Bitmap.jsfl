@@ -7,7 +7,7 @@
 	var timeline = dom.getTimeline();
 	var folderLayer = timeline.layers[0];
 	
-	var i, bitmapLayer, bitmap;
+	var i, bitmapLayer, bitmap, frame;
 
 	if (folderLayer.name == "vectors")
 	{
@@ -19,9 +19,16 @@
 			var bitmapIndex = timeline.layers.length - 1;
 			bitmapLayer = timeline.layers[bitmapIndex];
 
-			// Delete the bitmap
-			bitmap = bitmapLayer.frames[timeline.currentFrame].elements[0].libraryItem;
-			dom.library.deleteItem(bitmap.name);
+			// Delete all the bitmaps
+			for(i = 0; i < bitmapLayer.frames.length; i++)
+			{
+				frame = bitmapLayer.frames[i]
+				if (frame.elements.length)
+				{
+					bitmap = frame.elements[0].libraryItem;
+					dom.library.deleteItem(bitmap.name);
+				}
+			}	
 
 			// Delete the bitmap layer
 			timeline.deleteLayer(bitmapIndex);
@@ -68,47 +75,106 @@
 	var parentLayer = timeline.layers[0];
 	parentLayer.visible = false;
 	parentLayer.locked = true;
-	
-	// Update the name of the layer with the bitmap
-	var newLayerLength = timeline.layers.length;
+
+	// Add a new bitmap layer above the copied layers
 	var bitmapLayerIndex = origLength + 1;
+	timeline.setSelectedLayers(bitmapLayerIndex);
+	timeline.addNewLayer('bitmap', 'normal', true);
 	bitmapLayer = timeline.layers[bitmapLayerIndex];
-	bitmapLayer.name = "bitmap";
+
+	var EMPTY = -1;
+	var CONTENT = 0;
+	var KEYFRAME = 1;
 
 	// Select the contents of the original layers
+	var status;
 	var numFrames = timeline.frameCount;
-	for(i = 0; i < numFrames; ++i)
+	for(i = numFrames - 1; i >=0 ; --i)
 	{
 		timeline.currentFrame = i;
-		dom.selectAll();
-		//if nothing is selected, then continue
-		if(!dom.getSelectionRect())
+
+		// Check the status of the current frame
+		// 0 = no keyframes
+		// 1 = keyframes no elements
+		// 2 = keyframes + elements
+		status = frameStatus(bitmapLayerIndex + 1, i);
+
+		// Current frame has no keyframes, no content
+		if (status < KEYFRAME)
+		{
+			if (status == EMPTY)
+			{
+				timeline.setSelectedLayers(bitmapLayerIndex);
+				timeline.insertBlankKeyframe();	
+			}
 			continue;
-		//if we've selected an already converted bitmap, then continue
-		if(dom.selection.length == 1 && dom.selection[0].instanceType == "bitmap")
-			continue;
-		//convert selection
-		dom.convertSelectionToBitmap();
-		//put selection on the bitmap layer
-		dom.selectAll();
-		dom.clipCut();
-		timeline.setSelectedFrames([bitmapLayerIndex, i, i + 1]);
+		}
+
 		//ensure that there is a blank keyframe there to paste into
-		if(bitmapLayer.frameCount < i + 1 || bitmapLayer.frames[i].startFrame != i)
-			timeline.insertBlankKeyframe();
+		selectFrame(bitmapLayerIndex, i);
+		if (i > 0) timeline.insertBlankKeyframe(); // don't insert on the first frame
+
+		// Copy all the frames and paste on the bitmap layer
+		dom.selectAll();
+		dom.clipCopy();
+		selectFrame(bitmapLayerIndex, i);
 		dom.clipPaste(true);
+
+		// Convert the selection to a bitmap
+		dom.convertSelectionToBitmap();
+
+		//put selection on the bitmap layer
+		// dom.selectNone();
+
 		// Get the library item from the instance and rename it
 		if (bitmapName)
 		{
-			bitmap = bitmapLayer.frames[timeline.currentFrame].elements[0].libraryItem;
+			bitmap = bitmapLayer.frames[i].elements[0].libraryItem;
 			bitmap.name = numFrames > 1 ? bitmapName + (i+1) : bitmapName;
 		}
 	}
-	
+
 	// Delete the rest of the layers
-	for(i = bitmapLayerIndex + 1; i < newLayerLength; i++)
+	while(bitmapLayerIndex + 1 < timeline.layers.length)
 	{
-		timeline.deleteLayer(i);
+		timeline.deleteLayer(timeline.layers.length - 1);
+	}
+
+	function selectFrame(layer, frame)
+	{
+		// Select the current frame
+		timeline.setSelectedLayers(layer);
+		timeline.setSelectedFrames(frame, frame + 1);
+	}
+
+	// Function to check the current status of a frame
+	// -1 = no content
+	// 0 = content but no keyframe
+	// 1 = keyframes + content
+	function frameStatus(index, currentFrame)
+	{
+		var layer = timeline.layers[index];
+		var status = -1; // empty
+		var frame;
+		while(layer)
+		{
+			// if (currentFrame >= layer.frameCount) continue;
+
+			frame = layer.frames[currentFrame];
+
+			// Has content on it
+			if (frame && frame.elements.length)
+			{
+				status = 0;
+				if (frame.startFrame == i)
+				{
+					status = 1;
+					break;
+				}
+			}
+			layer = timeline.layers[++index];
+		}
+		return status;
 	}
 	
 }());
