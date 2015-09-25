@@ -5,7 +5,7 @@ Adobe Flash Professional Commands for Exporting, Optimizing and Publish HTML5 Ca
 ## Installation
 
 * Visit the latest release [here](https://github.com/SpringRoll/FlashToolkit/releases)
-* Download **FlashToolkit.zxp** 
+* Download **FlashToolkit.zxp**
 * CC & CC 2014: Install ZXP with the [Adobe Extension Manager CC](https://www.adobe.com/exchange/em_download/).
 * CC 2015: Install ZXP with the  [Manage Extensions app](https://blogs.adobe.com/flashpro/installing-zxp-extensions-using-the-manage-extensions-utility/)
 
@@ -25,10 +25,6 @@ Export a sequence of PNGs based on the frame labels. Useful if you're creating s
 
 Remove all redundant clear keyframes. In earlier versions of CC and CC 2014, blank keyframes added more filesize and produced playback issues in CreateJS. To use, run the command on the current timeline.
 
-#### Optimizing/Copy Layers To Bitmap
-
-This command combines all layers on the current timeline non-destructively into a single bitmap. All the layers are guided, locked and hidden. Running the script again will undo this convert and give you the normal vector layers. 
-
 #### Optimizing/Filter Finder
 
 Generate a report of all the MovieClips within the current project which contain filters (Color transforms, Drop shadows, etc). This is useful for tracking down and remove filters which harm performance. To use, simply run the command.
@@ -43,11 +39,15 @@ Remove all unused graphic frame from a selected graphic symbol in the library. T
 
 #### Optimizing/Optimize Keyframe
 
-Reduce the number of keyframes by eliminating keyframes that are similar. To run, navigate to a timeline of frames you would like to remove, then run the command. There are two values "Move Tolerance" and "Scale Tolerance". If two keyframes contain a symbol within those tolerance the second keyframe is removed. 
+Reduce the number of keyframes by eliminating keyframes that are similar. To run, navigate to a timeline of frames you would like to remove, then run the command. There are two values "Move Tolerance" and "Scale Tolerance". If two keyframes contain a symbol within those tolerance the second keyframe is removed.
 
 #### Timeline/Animation Event Label
 
-Create animation event labels on the timeline which work with `springroll.easeljs.Animator`. To use, select a range of frames on the current timeline and run the command. This will prompt for an event name to create a start and end label for use with Animator. For instance, "idle" event name will create "idle" and "idle_stop" labels. Animator has two types of event labels, `stop` (stop at the end) and `loop` (return to the beginning and keep playing). 
+Create animation event labels on the timeline which work with `springroll.easeljs.Animator`. To use, select a range of frames on the current timeline and run the command. This will prompt for an event name to create a start and end label for use with Animator. For instance, "idle" event name will create "idle" and "idle_stop" labels. Animator has two types of event labels, `stop` (stop at the end) and `loop` (return to the beginning and keep playing).
+
+#### Utilities/Copy Layers To Bitmap
+
+This command combines all layers on the current timeline non-destructively into a single bitmap. All the layers are guided, locked and hidden. Running the script again will undo this convert and give you the normal vector layers. 
 
 #### HTML5 Canvas Post Publish
 
@@ -57,7 +57,7 @@ This is not a command. This script automatically is invoked whenever an HTML5 Ca
 
 ### Dependencies
 
-To rebuild the extension for Flash, you need to have [Node](http://nodejs.org) and [Grunt](http://gruntjs.com/getting-started) installed. 
+To rebuild the extension for Flash, you need to have [Node](http://nodejs.org) and [Grunt](http://gruntjs.com/getting-started) installed.
 
 Download and install the [Adobe Exchange Packager](https://www.adobeexchange.com/resources) (you will need to login to the Adobe Exchange to be able to download the application).
 
@@ -69,9 +69,10 @@ Create a **settings.json** file within the FlashToolkit project folder with the 
 {
 	"packager": "/Applications/Adobe Exchange Packager.app/Contents/Resources/macosx/ZXPSignCmd",
 	"keystore": "/Users/username/Documents/MySignedCertificate.p12",
-	"storepass": "myCertPassword"	
+	"storepass": "myCertPassword"
 }
 ```
+You may need to make the ZXPSignCmd file executable, as it might not have the needed permissions by default.
 
 ### Building the ZXP
 

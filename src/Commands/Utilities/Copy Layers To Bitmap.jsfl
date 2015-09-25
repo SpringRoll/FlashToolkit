@@ -11,44 +11,60 @@
 
 	if (folderLayer.name == "vectors")
 	{
-		var undo = confirm("Unable to convert to bitmap because the first layers is already 'vectors'. Would you like to undo?");
-		
-		if (undo)
+		// Get the bitmap layer
+		var bitmapIndex = timeline.layers.length - 1;
+		bitmapLayer = timeline.layers[bitmapIndex];
+
+		// Delete all the bitmaps
+		for(i = 0; i < bitmapLayer.frames.length; i++)
 		{
-			// Get the bitmap layer
-			var bitmapIndex = timeline.layers.length - 1;
-			bitmapLayer = timeline.layers[bitmapIndex];
-
-			// Delete all the bitmaps
-			for(i = 0; i < bitmapLayer.frames.length; i++)
+			frame = bitmapLayer.frames[i]
+			if (frame.elements.length)
 			{
-				frame = bitmapLayer.frames[i]
-				if (frame.elements.length)
-				{
-					bitmap = frame.elements[0].libraryItem;
-					dom.library.deleteItem(bitmap.name);
-				}
-			}	
-
-			// Delete the bitmap layer
-			timeline.deleteLayer(bitmapIndex);
-
-			// Delete the vectors layer
-			folderLayer.visible = true;
-			folderLayer.locked = false;
-			folderLayer.layerType = "normal";
-			timeline.deleteLayer(0);
-
-			for (i = timeline.layers.length - 1; i >= 0; i--)
-			{
-				timeline.layers[i].layerType = "normal";
+				bitmap = frame.elements[0].libraryItem;
+				dom.library.deleteItem(bitmap.name);
 			}
+		}	
+
+		// Delete the bitmap layer
+		timeline.deleteLayer(bitmapIndex);
+
+		// Delete the vectors layer
+		folderLayer.visible = true;
+		folderLayer.locked = false;
+		folderLayer.layerType = "normal";
+		timeline.deleteLayer(0);
+
+		for (i = timeline.layers.length - 1; i >= 0; i--)
+		{
+			timeline.layers[i].layerType = "normal";
 		}
 		return;
 	}
 	
-	// Ask to update the bitmap name
-	var bitmapName = prompt("Image Name", "");//bitmap.name);
+	var bitmapName;
+
+	// If we're inside a symbol, use the name of the 
+	if (timeline.libraryItem)
+	{
+		bitmapName = timeline.libraryItem.name;
+		var index = bitmapName.indexOf('/');
+		if (index > -1)
+		{
+			bitmapName = bitmapName.substr(index + 1);
+		}
+	}
+	else if (dom.name)
+	{
+		// Chop of the ".fla" or ".xfl" extension
+		bitmapName = dom.name.substr(0, dom.name.indexOf('.'));
+	}
+
+	// Cancelled
+	if (!bitmapName)
+	{
+		return alert("Error: Invalid bitmap name");
+	}
 
 	// The number of layers
 	var origLength = timeline.layers.length;
@@ -123,14 +139,11 @@
 		// Convert the selection to a bitmap
 		dom.convertSelectionToBitmap();
 
-		//put selection on the bitmap layer
-		// dom.selectNone();
-
 		// Get the library item from the instance and rename it
 		if (bitmapName)
 		{
 			bitmap = bitmapLayer.frames[i].elements[0].libraryItem;
-			bitmap.name = numFrames > 1 ? bitmapName + (i+1) : bitmapName;
+			bitmap.name = bitmapName + (i+1);
 		}
 	}
 
