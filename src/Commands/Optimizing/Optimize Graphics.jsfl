@@ -156,7 +156,6 @@
 
 		for(var i=0, length = layers.length; i < length; i++)
 		{
-			timeline.setSelectedLayers(i);
 			var layer = layers[i];
 			if (layer.layerType != "normal" || !layer.frames[n])
 			{
@@ -167,19 +166,10 @@
 			{
 				continue;
 			}
-			if (frame.startFrame == n)
-			{
-				if (frame.duration > 1)
-				{
-					timeline.insertKeyframe(n + 1);
-				}
-				timeline.clearKeyframes(n);
-			}
-			else if (frame.duration - 1 + frame.startFrame > n)
-			{
+			timeline.setSelectedLayers(i);
+			if(frame.startFrame + frame.duration > n + 1)
 				timeline.insertKeyframe(n + 1);
-			}
-			timeline.convertToBlankKeyframes(n);
+			timeline.clearFrames(n, n+1);
 		}
 	};
 
