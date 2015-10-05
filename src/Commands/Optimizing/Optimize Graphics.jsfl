@@ -111,12 +111,13 @@
 		{
 			this.framesFound.sort(sortNumber);
 			doc.library.editItem(this.searchItem.name);
+			var timeline = doc.getTimeline();
 			for(j=0; j < frameCount; j++)
 			{
 				if (!inObject(j, this.framesFound))
 				{
 					fl.trace("Clearing frame : " + (j+1));
-					this.clearFrame(doc.getTimeline(), j);
+					this.clearFrame(timeline, j);
 				}
 			}
 		}
