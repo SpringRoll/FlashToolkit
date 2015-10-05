@@ -1,9 +1,9 @@
 <?xml version="1.0.0" encoding="UTF-8" standalone="no"?>
-<macromedia-extension 
-	name="SpringRoll Flash Toolkit" 
-	id="io.springroll.toolkit" 
-	requires-restart="true" 
-	version="1.1.4">
+<macromedia-extension
+	name="SpringRoll Flash Toolkit"
+	id="io.springroll.toolkit"
+	requires-restart="true"
+	version="1.1.5">
 	<author name="SpringRoll"/>
 	<description>
 		<![CDATA[Commands for Exporting, Optimizing and Publish HTML5 Canvas documents]]>
@@ -13,7 +13,7 @@
 	</license-agreement>
  	<products>
 		<product version="13" primary="true" name="Flash"/>
-	</products>	
+	</products>
 	<files>
 
 		<file source="JSFLLibraries/ArrayUtils.jsfl" destination="$Flash/JSFLLibraries/" />
@@ -39,5 +39,5 @@
 
 		<file source="Tools/HTMLCanvasPostPublish.jsfl" destination="$Flash/Tools/" />
 
-	</files>	
+	</files>
 </macromedia-extension>
