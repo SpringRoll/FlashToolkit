@@ -43,8 +43,8 @@
 	 */
 	p.exportClip = function(selectedItem)
 	{
-		var symbolPath = selectedItem.name.substring(0, selectedItem.name.indexOf("/") + 1),
-			symbolName = selectedItem.name.substring(selectedItem.name.indexOf("/") + 1),
+		var symbolPath = selectedItem.name.substring(0, selectedItem.name.lastIndexOf("/") + 1),
+			symbolName = selectedItem.name.substring(selectedItem.name.lastIndexOf("/") + 1),
 			scaledItem,
 			library;
 
