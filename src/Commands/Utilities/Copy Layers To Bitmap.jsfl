@@ -1,5 +1,8 @@
 (function()
 {
+	var DATA_KEY = 'copyLayersToBitmapScale';
+	var SCALE_PROMPT = 'Output scale';
+
 	var dom = fl.getDocumentDOM();
 
 	if (!dom) return;
@@ -43,27 +46,56 @@
 	}
 	
 	var bitmapName;
+	var scale;
+	var defaultScale;
 
 	// If we're inside a symbol, use the name of the 
 	if (timeline.libraryItem)
 	{
-		bitmapName = timeline.libraryItem.name;
+		var item = timeline.libraryItem;
+		bitmapName = item.name;
 		var index = bitmapName.indexOf('/');
 		if (index > -1)
 		{
 			bitmapName = bitmapName.substr(index + 1);
 		}
+
+		// Get and save scale for library item
+		defaultScale = item.hasData(DATA_KEY) ? item.getData(DATA_KEY) : '1.0';
+		scale = prompt(SCALE_PROMPT, defaultScale);
+		if (!scale)
+		{
+			return;
+		}
+		scale = parseFloat(scale);
+		item.addData(DATA_KEY, "double", scale);
 	}
 	else if (dom.name)
 	{
 		// Chop of the ".fla" or ".xfl" extension
-		bitmapName = dom.name.substr(0, dom.name.indexOf('.'));
+		bitmapName = dom.name.substr(0, dom.name.lastIndexOf('.'));
+
+		// Get and save scale for document
+		defaultScale = dom.documentHasData(DATA_KEY) ? dom.getDataFromDocument(DATA_KEY) : '1.0';
+		scale = prompt(SCALE_PROMPT, defaultScale);
+		if (!scale)
+		{
+			return;
+		}
+		scale = parseFloat(scale);
+		dom.addDataToDocument(DATA_KEY, "double", scale);
 	}
 
 	// Cancelled
 	if (!bitmapName)
 	{
 		return alert("Error: Invalid bitmap name");
+	}
+
+	// No scale, if the document isn't saved
+	if (!scale)
+	{
+		return alert("Error: Invalid scale amount");
 	}
 
 	// The number of layers
@@ -136,14 +168,22 @@
 		selectFrame(bitmapLayerIndex, i);
 		dom.clipPaste(true);
 
+		// Scale the selection
+		dom.transformSelection(scale, 0, 0, scale);
+
 		// Convert the selection to a bitmap
 		dom.convertSelectionToBitmap();
+
+		// Undo scale to the selection
+		var bitmap = bitmapLayer.frames[i].elements[0];
+		dom.selection = [bitmap];
+		dom.transformSelection(1/scale, 0, 0, 1/scale);
 
 		// Get the library item from the instance and rename it
 		if (bitmapName)
 		{
-			bitmap = bitmapLayer.frames[i].elements[0].libraryItem;
-			bitmap.name = bitmapName + (i+1);
+			var bitmapItem = bitmap.libraryItem;
+			bitmapItem.name = bitmapName + (i+1);
 		}
 	}
 
