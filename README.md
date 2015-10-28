@@ -49,6 +49,10 @@ Create animation event labels on the timeline which work with `springroll.easelj
 
 This command combines all layers on the current timeline non-destructively into a single bitmap. All the layers are guided, locked and hidden. Running the script again will undo this convert and give you the normal vector layers. 
 
+#### Utilities/Local To Global Scale
+
+Get the global scale that a nested clip is displayed at. Only available for editing the symbol in place. This can be combined with the Copy Layer To Bitmap command to generate bitmaps that are rendered _only_ as large as they need to be.
+
 #### HTML5 Canvas Post Publish
 
 This is not a command. This script automatically is invoked whenever an HTML5 Canvas FLA is published. It does two things: first, a JSON file is created of the `lib.properties` (which contains the manifest, size, framerate, etc) of the current document. Also, the output file is optimize to better work with a JavaScript minification tool (e.g., [Uglify](https://github.com/mishoo/UglifyJS2)).

@@ -1,6 +1,7 @@
 (function()
 {
 	var DATA_KEY = 'copyLayersToBitmapScale';
+	var DEFAULT_DATA_KEY = 'copyLayersToBitmapScaleDefaultGlobal';
 	var SCALE_PROMPT = 'Output scale';
 
 	var dom = fl.getDocumentDOM();
@@ -48,6 +49,8 @@
 	var bitmapName;
 	var scale;
 	var defaultScale;
+	var defaultGlobalScale = dom.documentHasData(DEFAULT_DATA_KEY) ? 
+		dom.getDataFromDocument(DEFAULT_DATA_KEY) : '1.0';
 
 	// If we're inside a symbol, use the name of the 
 	if (timeline.libraryItem)
@@ -61,7 +64,7 @@
 		}
 
 		// Get and save scale for library item
-		defaultScale = item.hasData(DATA_KEY) ? item.getData(DATA_KEY) : '1.0';
+		defaultScale = item.hasData(DATA_KEY) ? item.getData(DATA_KEY) : defaultGlobalScale;
 		scale = prompt(SCALE_PROMPT, defaultScale);
 		if (!scale)
 		{
@@ -76,7 +79,7 @@
 		bitmapName = dom.name.substr(0, dom.name.lastIndexOf('.'));
 
 		// Get and save scale for document
-		defaultScale = dom.documentHasData(DATA_KEY) ? dom.getDataFromDocument(DATA_KEY) : '1.0';
+		defaultScale = dom.documentHasData(DATA_KEY) ? dom.getDataFromDocument(DATA_KEY) : defaultGlobalScale;
 		scale = prompt(SCALE_PROMPT, defaultScale);
 		if (!scale)
 		{
@@ -97,6 +100,10 @@
 	{
 		return alert("Error: Invalid scale amount");
 	}
+
+
+	// Save the default setting
+	dom.addDataToDocument(DEFAULT_DATA_KEY, "double", scale);
 
 	// The number of layers
 	var origLength = timeline.layers.length;
@@ -131,7 +138,6 @@
 	bitmapLayer = timeline.layers[bitmapLayerIndex];
 
 	var EMPTY = -1;
-	var CONTENT = 0;
 	var KEYFRAME = 1;
 
 	// Select the contents of the original layers
