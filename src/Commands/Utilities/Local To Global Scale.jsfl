@@ -26,22 +26,27 @@
 		// Get the new timeline
 		timeline = doc.getTimeline();
 
+		var foundItem = false;
 		for(var i = 0; i < timeline.layers.length; i++)
 		{
 			var frame = timeline.layers[i].frames[timeline.currentFrame];
 			for(var j = 0; j < frame.elements.length; j++)
 			{
 				var element = frame.elements[j];
-				if (element.libraryItem === libraryItem)
+				if (element.libraryItem == libraryItem)
 				{
 					scaleX *= element.scaleX;
 					scaleY *= element.scaleY;
-					libraryItem = timeline.libraryItem;
+					foundItem = true;
 					continue;
 				}
 			}
 		}
-		libraryItem = null;
+		if (!foundItem)
+		{
+			break;
+		}
+		libraryItem = timeline.libraryItem;
 	}
 
 	// Do a little rounding
