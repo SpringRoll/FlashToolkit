@@ -3,7 +3,7 @@
 	name="SpringRoll Flash Toolkit"
 	id="io.springroll.toolkit"
 	requires-restart="true"
-	version="1.2.0">
+	version="1.3.0">
 	<author name="SpringRoll"/>
 	<description>
 		<![CDATA[Commands for Exporting, Optimizing and Publish HTML5 Canvas documents]]>
@@ -37,7 +37,6 @@
 		<file source="Commands/Optimizing/HTML5 Canvas Size Report.jsfl" destination="$Flash/Commands/Optimizing/" />
 		
 		<file source="Commands/Utilities/Copy Layers To Bitmap.jsfl" destination="$Flash/Commands/Utilities/" />
-		<file source="Commands/Utilities/Local To Global Scale.jsfl" destination="$Flash/Commands/Utilities/" />
 
 		<file source="Tools/HTMLCanvasPostPublish.jsfl" destination="$Flash/Tools/" />
 

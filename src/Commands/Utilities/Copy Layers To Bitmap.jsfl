@@ -1,7 +1,6 @@
 (function()
 {
 	var DATA_KEY = 'copyLayersToBitmapScale';
-	var DEFAULT_DATA_KEY = 'copyLayersToBitmapScaleDefaultGlobal';
 	var SCALE_PROMPT = 'Output scale';
 
 	var dom = fl.getDocumentDOM();
@@ -49,8 +48,6 @@
 	var bitmapName;
 	var scale;
 	var defaultScale;
-	var defaultGlobalScale = dom.documentHasData(DEFAULT_DATA_KEY) ? 
-		dom.getDataFromDocument(DEFAULT_DATA_KEY) : '1.0';
 
 	// If we're inside a symbol, use the name of the 
 	if (timeline.libraryItem)
@@ -64,7 +61,7 @@
 		}
 
 		// Get and save scale for library item
-		defaultScale = item.hasData(DATA_KEY) ? item.getData(DATA_KEY) : defaultGlobalScale;
+		defaultScale = item.hasData(DATA_KEY) ? item.getData(DATA_KEY) : localToGlobalScale();
 		scale = prompt(SCALE_PROMPT, defaultScale);
 		if (!scale)
 		{
@@ -79,7 +76,7 @@
 		bitmapName = dom.name.substr(0, dom.name.lastIndexOf('.'));
 
 		// Get and save scale for document
-		defaultScale = dom.documentHasData(DATA_KEY) ? dom.getDataFromDocument(DATA_KEY) : defaultGlobalScale;
+		defaultScale = dom.documentHasData(DATA_KEY) ? dom.getDataFromDocument(DATA_KEY) : localToGlobalScale();
 		scale = prompt(SCALE_PROMPT, defaultScale);
 		if (!scale)
 		{
@@ -100,10 +97,6 @@
 	{
 		return alert("Error: Invalid scale amount");
 	}
-
-
-	// Save the default setting
-	dom.addDataToDocument(DEFAULT_DATA_KEY, "double", scale);
 
 	// The number of layers
 	var origLength = timeline.layers.length;
@@ -235,5 +228,75 @@
 		}
 		return status;
 	}
-	
+
+	function localToGlobalScale()
+	{
+		var doc = fl.getDocumentDOM();
+
+		if (!doc) return;
+
+		var scaleX = 1;
+		var scaleY = 1;
+
+		var timeline = doc.getTimeline();
+		var libraryItem = timeline.libraryItem;
+		var steps = 0;
+
+		while(libraryItem)
+		{
+			// Go "up" a nested level
+			doc.exitEditMode();
+			steps++;
+
+			// Get the new timeline
+			timeline = doc.getTimeline();
+
+			var foundItem = false;
+			for(var i = 0; i < timeline.layers.length; i++)
+			{
+				var frame = timeline.layers[i].frames[timeline.currentFrame];
+				if(!frame)
+					continue;
+
+				for(var j = 0; j < frame.elements.length; j++)
+				{
+					var element = frame.elements[j];
+					if (element.libraryItem == libraryItem)
+					{
+						scaleX *= element.scaleX;
+						scaleY *= element.scaleY;
+						foundItem = true;
+						break;
+					}
+				}
+				if(foundItem)
+					break;
+			}
+			if (!foundItem)
+			{
+				break;
+			}
+			libraryItem = timeline.libraryItem;
+		}
+
+		// Go back to where we started
+		if (steps)
+		{
+			while(steps--)
+			{
+				if (doc.selection.length)
+				{
+					doc.enterEditMode("inPlace");
+				}
+			}
+		}
+
+		// Do a little rounding
+		scaleX = Math.round(scaleX * 100000) / 100000;
+		scaleY = Math.round(scaleY * 100000) / 100000;
+
+		// Get the largest scale
+		return Math.max(scaleX, scaleY);
+	}
+
 }());
