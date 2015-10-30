@@ -45,6 +45,12 @@
 	var bitmapName;
 	var scale = localToGlobalScale();
 
+	// The prompt was cancelled
+	if (scale === null)
+	{
+		return;
+	}
+
 	// If we're inside a symbol, use the name of the 
 	if (timeline.libraryItem)
 	{
@@ -56,16 +62,15 @@
 			bitmapName = bitmapName.substr(index + 1);
 		}
 	}
-	else if (dom.name)
+	else 
 	{
+		if (!dom.name)
+		{
+			return alert("Please save document first.");
+		}
+
 		// Chop of the ".fla" or ".xfl" extension
 		bitmapName = dom.name.substr(0, dom.name.lastIndexOf('.'));
-	}
-
-	// Cancelled
-	if (!bitmapName)
-	{
-		return alert("Error: Invalid bitmap name");
 	}
 
 	// The number of layers
@@ -207,10 +212,19 @@
 
 		var scaleX = 1;
 		var scaleY = 1;
+		var scale;
 
 		var timeline = doc.getTimeline();
-		var libraryItem = timeline.libraryItem;
+		var originalItem = libraryItem = timeline.libraryItem;
 		var steps = 0;
+
+		// We're on the main stage, ignore the rest set to 100%
+		if (!libraryItem)
+		{
+			return 1;
+		}
+
+		var scaleKey = 'copyLayersToBitmapScale';
 
 		while(libraryItem)
 		{
@@ -221,30 +235,32 @@
 			// Get the new timeline
 			timeline = doc.getTimeline();
 
-			var foundItem = false;
-			for(var i = 0; i < timeline.layers.length; i++)
+			var element = doc.selection[0];
+			if (element && element.libraryItem == libraryItem)
 			{
-				var frame = timeline.layers[i].frames[timeline.currentFrame];
-				if(!frame)
-					continue;
-
-				for(var j = 0; j < frame.elements.length; j++)
-				{
-					var element = frame.elements[j];
-					if (element.libraryItem == libraryItem)
-					{
-						scaleX *= element.scaleX;
-						scaleY *= element.scaleY;
-						foundItem = true;
-						break;
-					}
-				}
-				if(foundItem)
-					break;
+				scaleX *= element.scaleX;
+				scaleY *= element.scaleY;
 			}
-			if (!foundItem)
+			else
 			{
-				break;
+				// Go back into the symbol after we exited
+				doc.library.editItem(libraryItem.name);
+
+				// Get the saved scale amount
+				var defaultScale = libraryItem.hasData(scaleKey) ? 
+					libraryItem.getData(scaleKey) : 1;
+
+				// Aask for the scale
+				var scale = prompt("Output scale", defaultScale);
+
+				if (!scale) return null;
+
+				scale = parseFloat(scale);
+
+				// Save the scale to use at the default later on
+				libraryItem.addData(scaleKey, "double", scale);
+
+				return scale;
 			}
 			libraryItem = timeline.libraryItem;
 		}
@@ -265,8 +281,18 @@
 		scaleX = Math.round(scaleX * 100000) / 100000;
 		scaleY = Math.round(scaleY * 100000) / 100000;
 
+		// Get the larger scale size
+		scale = Math.max(scaleX, scaleY);
+
+		// Save the scale to the library item if we have it
+		if (originalItem)
+		{
+			// Save the scale to use at the default later on
+			originalItem.addData(scaleKey, "double", scale);
+		}
+
 		// Get the largest scale
-		return Math.max(scaleX, scaleY);
+		return scale;
 	}
 
 }());
