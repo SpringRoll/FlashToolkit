@@ -1,8 +1,5 @@
 (function()
 {
-	var DATA_KEY = 'copyLayersToBitmapScale';
-	var SCALE_PROMPT = 'Output scale';
-
 	var dom = fl.getDocumentDOM();
 
 	if (!dom) return;
@@ -46,8 +43,7 @@
 	}
 	
 	var bitmapName;
-	var scale;
-	var defaultScale;
+	var scale = localToGlobalScale();
 
 	// If we're inside a symbol, use the name of the 
 	if (timeline.libraryItem)
@@ -59,43 +55,17 @@
 		{
 			bitmapName = bitmapName.substr(index + 1);
 		}
-
-		// Get and save scale for library item
-		defaultScale = item.hasData(DATA_KEY) ? item.getData(DATA_KEY) : localToGlobalScale();
-		scale = prompt(SCALE_PROMPT, defaultScale);
-		if (!scale)
-		{
-			return;
-		}
-		scale = parseFloat(scale);
-		item.addData(DATA_KEY, "double", scale);
 	}
 	else if (dom.name)
 	{
 		// Chop of the ".fla" or ".xfl" extension
 		bitmapName = dom.name.substr(0, dom.name.lastIndexOf('.'));
-
-		// Get and save scale for document
-		defaultScale = dom.documentHasData(DATA_KEY) ? dom.getDataFromDocument(DATA_KEY) : localToGlobalScale();
-		scale = prompt(SCALE_PROMPT, defaultScale);
-		if (!scale)
-		{
-			return;
-		}
-		scale = parseFloat(scale);
-		dom.addDataToDocument(DATA_KEY, "double", scale);
 	}
 
 	// Cancelled
 	if (!bitmapName)
 	{
 		return alert("Error: Invalid bitmap name");
-	}
-
-	// No scale, if the document isn't saved
-	if (!scale)
-	{
-		return alert("Error: Invalid scale amount");
 	}
 
 	// The number of layers
