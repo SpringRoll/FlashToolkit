@@ -235,7 +235,7 @@
 			// Get the new timeline
 			timeline = doc.getTimeline();
 
-			var element = doc.selection[0];
+			var element = doc.selection.length ? doc.selection[0] : null;
 			if (element && element.libraryItem == libraryItem)
 			{
 				scaleX *= element.scaleX;
@@ -243,12 +243,16 @@
 			}
 			else
 			{
+				fl.outputPanel.clear();
+				fl.trace("WARNING: Unable to measure the relative scale either because the current item was opened directly from the library ");
+				fl.trace("         or because a tween is preventing the exit and enter of the symbol. Prompting for scale...");
+
 				// Go back into the symbol after we exited
-				doc.library.editItem(libraryItem.name);
+				doc.library.editItem(originalItem.name);
 
 				// Get the saved scale amount
-				var defaultScale = libraryItem.hasData(scaleKey) ? 
-					libraryItem.getData(scaleKey) : 1;
+				var defaultScale = originalItem.hasData(scaleKey) ? 
+					originalItem.getData(scaleKey) : 1;
 
 				// Aask for the scale
 				var scale = prompt("Output scale", defaultScale);
@@ -258,7 +262,7 @@
 				scale = parseFloat(scale);
 
 				// Save the scale to use at the default later on
-				libraryItem.addData(scaleKey, "double", scale);
+				originalItem.addData(scaleKey, "double", scale);
 
 				return scale;
 			}
