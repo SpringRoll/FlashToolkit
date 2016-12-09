@@ -30,11 +30,11 @@ module.exports = function(grunt)
 			}
 		},
 		exec: {
-			package: "'<%= settings.packager %>' " +
+			package: "\"<%= settings.packager %>\" " +
 				"-sign " +
 				"src " +
-				"'<%= output %>' " +
-				"<%= settings.keystore %> " +
+				"\"<%= output %>\" " +
+				"\"<%= settings.keystore %>\" " +
 				"<%= settings.storepass %>"
 				
 		},
